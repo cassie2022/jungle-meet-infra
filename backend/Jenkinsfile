@@ -11,10 +11,9 @@ pipeline {
   stages {
     stage('init'){
       steps{
-        withAWS(region: 'ap-southeast-2'){
-          dir(WORKDIR){
-            sh 'terraform init'}
-        }                               
+        dir(WORKDIR){
+          sh 'terraform init'
+        }                            
       }
     }
   }
