@@ -1,10 +1,20 @@
 pipeline {
   agent any
 
+  environment {
+    AWS_ACCESS_KEY_ID     = credentials('jenkins-aws-secret-key-id')
+    AWS_SECRET_ACCESS_KEY = credentials('jenkins-aws-secret-access-key')
+
+    WORKDIR = "./backend"
+  }
+
   stages {
-    stage('build') {
-      steps {
-        echo "Hello World!"
+    stage('init'){
+      steps{
+        withAWS(region: 'ap-southeast-2'){
+          dir(WORKDIR){
+            sh 'terraform init'}
+        }                               
       }
     }
   }
