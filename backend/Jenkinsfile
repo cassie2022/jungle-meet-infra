@@ -1,6 +1,11 @@
 pipeline {
   agent any
 
+  parameters {
+    booleanParam defaultValue: false, name: 'TFapply'
+    booleanParam defaultValue: false, name: 'TFdestroy'
+  }
+
   environment {
     AWS_ACCESS_KEY_ID     = credentials('jenkins-aws-secret-key-id')
     AWS_SECRET_ACCESS_KEY = credentials('jenkins-aws-secret-access-key')
@@ -9,11 +14,36 @@ pipeline {
   }
 
   stages {
-    stage('init'){
+    stage('terraform init') {
       steps{
-        dir(WORKDIR){
+        dir(WORKDIR) {
           sh 'terraform init'
         }                            
+      }
+    }
+
+    stage('terraform plan') {
+      steps{
+        dir(WORKDIR) {
+          sh 'terraform plan -out=tf.plan'
+        }                            
+      }
+    }
+
+    stage('terraform apply') {
+      steps{                
+        dir(WORKDIR){
+          when {expression{return params.TFapply}}
+          sh 'terraform apply -auto-approve'
+        }   
+      }
+    }
+        
+    stage('terraform destroy') {
+      steps{
+        when {expression{return params.TFdestroy}}
+        dir(WORKDIR) {
+          sh 'terraform destroy -auto-approve'}
       }
     }
   }
