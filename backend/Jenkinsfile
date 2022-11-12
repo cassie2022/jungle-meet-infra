@@ -31,17 +31,17 @@ pipeline {
     }
 
     stage('terraform apply') {
-      steps{                
+      when {expression{return params.TFapply}}
+      steps{       
         dir(WORKDIR){
-          when {expression{return params.TFapply}}
           sh 'terraform apply -auto-approve'
         }   
       }
     }
         
     stage('terraform destroy') {
+      when {expression{return params.TFdestroy}}
       steps{
-        when {expression{return params.TFdestroy}}
         dir(WORKDIR) {
           sh 'terraform destroy -auto-approve'}
       }
