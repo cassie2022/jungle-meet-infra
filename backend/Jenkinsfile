@@ -25,10 +25,7 @@ pipeline {
     stage('terraform plan') {
       steps{
         dir(WORKDIR) {
-          sh "printenv"
-          echo "${env.AWS_ACCESS_KEY_ID}"
-          echo "${env.AWS_SECRET_ACCESS_KEY}"
-          sh 'terraform plan -out=tf.plan'
+          sh 'terraform plan'
         }                            
       }
     }
