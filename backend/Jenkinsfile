@@ -7,7 +7,7 @@ pipeline {
   }
 
   environment {
-    AWS_ACCESS_KEY_ID     = "test"
+    AWS_ACCESS_KEY_ID     = credentials('jenkins-aws-access-key-id')
     AWS_SECRET_ACCESS_KEY = credentials('jenkins-aws-secret-access-key')
 
     WORKDIR = "./backend"
@@ -27,8 +27,7 @@ pipeline {
         dir(WORKDIR) {
           sh "printenv"
           echo "${env.AWS_ACCESS_KEY_ID}"
-          export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
-          export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+          echo "${env.AWS_SECRET_ACCESS_KEY}"
           sh 'terraform plan -out=tf.plan'
         }                            
       }
